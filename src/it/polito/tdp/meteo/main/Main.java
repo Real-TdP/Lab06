@@ -1,4 +1,4 @@
-package it.polito.tdp.meteo;
+package it.polito.tdp.meteo.main;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
