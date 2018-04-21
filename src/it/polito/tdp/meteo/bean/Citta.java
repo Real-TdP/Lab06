@@ -7,18 +7,30 @@ public class Citta {
 	private String nome;
 	private List<Rilevamento> rilevamenti;
 	private int counter = 0;
+	private int counterBis=0;
+	private boolean visited;
 	
 	public Citta(String nome) {
 		this.nome = nome;
+		this.visited=false;
 	}
 	
 	public Citta(String nome, List<Rilevamento> rilevamenti) {
 		this.nome = nome;
 		this.rilevamenti = rilevamenti;
+		this.visited=false;
 	}
 
 	public String getNome() {
 		return nome;
+	}
+	public boolean isVisited() {
+		return visited;
+	}
+	
+	public void setVisited(Boolean that) {
+		this.visited=that;
+		return;
 	}
 
 	public void setNome(String nome) {
@@ -36,13 +48,31 @@ public class Citta {
 	public int getCounter() {
 		return counter;
 	}
+	public int getCounterB() {
+		return counterBis;
+	}
 
 	public void setCounter(int counter) {
 		this.counter = counter;
 	}
+	public void setCounterB(int counter) {
+		this.counterBis = counter;
+	}
 	
 	public void increaseCounter() {
 		this.counter += 1;
+	}
+	public void decreaseCounter() {
+		this.counter -= 1;
+	}
+	public void increaseCounterB() {
+		this.counterBis += 1;
+	}
+	public void decreaseCounterB() {
+		this.counterBis -=1;
+	}
+	public void resetCounterB() {
+		this.counterBis =0;
 	}
 
 	@Override

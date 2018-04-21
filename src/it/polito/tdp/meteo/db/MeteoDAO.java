@@ -7,10 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.polito.tdp.meteo.bean.Citta;
 import it.polito.tdp.meteo.bean.Rilevamento;
 
-public class MeteoDAO {
 
+public class MeteoDAO {
+	
+
+	/** permette di ottenere tutti i rilevamenti presenti nel database
+	 * @return
+	 */
 	public List<Rilevamento> getAllRilevamenti() {
 
 		final String sql = "SELECT Localita, Data, Umidita FROM situazione ORDER BY data ASC";
@@ -38,15 +44,65 @@ public class MeteoDAO {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	
+	public List<Citta> getCitta(){
+		final String sql = "SELECT Localita from situazione GROUP BY Localita";
 
-	public List<Rilevamento> getAllRilevamentiLocalitaMese(int mese, String localita) {
+		List<Citta> citta = new ArrayList<Citta>();
 
-		return null;
+		try {
+			Connection conn = DBConnect.getInstance().getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				String city=rs.getString("Localita");
+				Citta c = new Citta(city,this.getRilevamenti(city));
+				citta.add(c);
+			}
+
+			conn.close();
+			return citta;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
-	public Double getAvgRilevamentiLocalitaMese(int mese, String localita) {
 
-		return 0.0;
+	private List<Rilevamento> getRilevamenti(String city) {
+		
+		final String sql = "SELECT Localita, Data, Umidita FROM situazione WHERE Localita LIKE ? ORDER BY data ASC ";
+
+		List<Rilevamento> rilevamenti = new ArrayList<Rilevamento>();
+
+		try {
+			Connection conn = DBConnect.getInstance().getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, city);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+
+				Rilevamento r = new Rilevamento(rs.getString("Localita"), rs.getDate("Data"), rs.getInt("Umidita"));
+				rilevamenti.add(r);
+			}
+
+			conn.close();
+			return rilevamenti;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
+	
+
+	
 
 }
